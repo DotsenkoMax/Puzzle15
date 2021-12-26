@@ -26,7 +26,7 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public List<Board> play() {
+    public List<Board> play() throws IllegalArgumentException {
         Board2PQAdapter answer = playWithSqueeze();
         if (answer != null) {
             return answer.getAllWay2Initial();
@@ -35,16 +35,18 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public Board2PQAdapter playWithSqueeze() {
+    public Board2PQAdapter playWithSqueeze() throws IllegalArgumentException {
+        int boundary = 100_000_000;
         PriorityQueue<Board2PQAdapter> pq = new PriorityQueue<>(Board2PQAdapter::compareTo);
         pq.add(new Board2PQAdapter(initialBoard, 0, a, b));
+        int idx = 0;
         while (!pq.isEmpty()) {
             Board2PQAdapter now = pq.poll();
-//            if (now.moveNumber % 1000 == 0 && now.moveNumber != 0) {
-//                System.out.printf("Moves: %s, Dist %s\n", now.moveNumber, now.currentBoard.manhattanDistance());
-//                System.out.println(now.currentBoard);
-//                System.out.println("---------------------------------------------------");
-//            }
+
+            if (idx == boundary) {
+                throw new IllegalArgumentException();
+            }
+
             if (now.currentBoard.manhattanDistance() == 0) {
                 moves = now.moveNumber;
                 return now;
@@ -63,6 +65,7 @@ public class GameImpl implements Game {
                 }
                 pq.add(next);
             }
+            idx += 1;
         }
         return null;
     }

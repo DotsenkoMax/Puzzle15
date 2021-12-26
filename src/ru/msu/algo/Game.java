@@ -5,8 +5,9 @@ import java.util.List;
 public interface Game {
     Board shuffle();
 
-    List<Board> play();
-    Board2PQAdapter playWithSqueeze();
+    List<Board> play() throws IllegalArgumentException;
+
+    Board2PQAdapter playWithSqueeze() throws IllegalArgumentException;
 
     int getMoves();
 }
